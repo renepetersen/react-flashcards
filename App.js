@@ -54,13 +54,21 @@ const Tabs = createBottomTabNavigator({
 	}
 })
 
+const MainNavigator = createStackNavigator({
+  Home: {
+    screen: Tabs,
+    navigationOptions: {
+      header: null
+    }
+  }
+})
 
 export default class App extends React.Component {
 	render() {
 		return (
 			<View style={{flex:1}}>
 				<FlashcardsStatusBar backgroundColor={purple} barStyle='light-content' />
-				<Tabs />
+				<MainNavigator />
 			</View>
 		);
 	}

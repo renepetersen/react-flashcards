@@ -1,32 +1,12 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
-import { getDecks } from '../utils/api'
-
+import { View, Text, StyleSheet} from 'react-native'
 import { purple, white } from '../constants/colors'
 
 class Decks extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			decks: {}
-		}
-	}
-	componentDidMount() {
-		getDecks()
-			.then(results => { this.setState(() => ({ decks: results })) })
-	}
 	render() {
-		const { decks } = this.state
-		
 		return (
 			<View style={styles.center}>
-				{Object.keys(decks).map((item) => {
-					return (
-						<View key={item}>
-							<Text>{item}</Text>
-						</View>
-					)
-				})}
+				<Text>Decks</Text>
 			</View>
 		)
 	}
