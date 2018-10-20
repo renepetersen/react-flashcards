@@ -5,6 +5,7 @@ import { Constants } from 'expo'
 
 import Decks from './components/Decks'
 import NewDeck from './components/NewDeck'
+import DeckDetail from './components/DeckDetail'
 
 import { purple, white } from './constants/colors'
 import { Foundation, MaterialCommunityIcons } from '@expo/vector-icons'
@@ -55,12 +56,21 @@ const Tabs = createBottomTabNavigator({
 })
 
 const MainNavigator = createStackNavigator({
-  Home: {
-    screen: Tabs,
-    navigationOptions: {
-      header: null
-    }
-  }
+	Home: {
+		screen: Tabs,
+		navigationOptions: {
+			header: null
+		}
+	},
+	DeckDetail: {
+		screen: DeckDetail,
+		navigationOptions: {
+			headerTintColor: white,
+			headerStyle: {
+				backgroundColor: purple
+			}
+		}
+	}
 })
 
 export default class App extends React.Component {

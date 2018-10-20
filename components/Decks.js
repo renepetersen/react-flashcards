@@ -1,8 +1,14 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity} from 'react-native'
 import { getDecks } from '../utils/api'
+import { DeckDetail } from '../components/DeckDetail'
 
 import { purple, white } from '../constants/colors'
+
+// 1.Deck List View (Default View - Dashboard)
+// displays the title of each Deck
+// displays the number of cards in each deck
+
 
 class Decks extends Component {
 	constructor(props) {
@@ -13,17 +19,31 @@ class Decks extends Component {
 	}
 	componentDidMount() {
 		getDecks()
-			.then(results => { this.setState(() => ({ decks: results })) })
+			.then(results => { 
+				this.setState(
+					{ decks: results }
+				)
+			})
+	}
+
+	openDeckDetail (deckId) {
+		const { navigate } = this.props.navigation
+ 
+		return navigate('DeckDetail', { deckId })
 	}
 	render() {
 		const { decks } = this.state
-		
+
 		return (
 			<View style={styles.center}>
 				{Object.keys(decks).map((item) => {
+					const deckTitle = decks[item].title
+					
 					return (
 						<View key={item}>
-							<Text>{item}</Text>
+							<TouchableOpacity onPress={() => this.openDeckDetail(deckTitle)}>
+								<Text>{deckTitle}</Text>
+							</TouchableOpacity>
 						</View>
 					)
 				})}
