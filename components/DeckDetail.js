@@ -44,18 +44,16 @@ class DeckDetail extends Component {
 					<Text style={[styles.subheader]}>{deck.questions.length} Cards</Text>
 
 					{deck.questions.length > 0 ? ( 
-						<View>
-							<TouchableOpacity onPress={() => this.startQuiz()}>
-								<Text style={styles.button}>Start Quiz</Text>
-							</TouchableOpacity>
-
-							<TouchableOpacity onPress={() => this.handleNewCard()}>
-								<Text style={styles.button}>Add new card</Text>
-							</TouchableOpacity>
-						</View>
+						<TouchableOpacity onPress={() => this.startQuiz()}>
+							<Text style={styles.button}>Start Quiz</Text>
+						</TouchableOpacity>
 					) : (
-						<Text>Empty deck</Text>
+						<Text style={{marginBottom: 20}}>Empty deck</Text>
 					)}
+
+					<TouchableOpacity onPress={() => this.handleNewCard()}>
+						<Text style={styles.button}>Add new card</Text>
+					</TouchableOpacity>
 
 				</View>
 			)
