@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet} from 'react-native'
-import { purple, white } from '../constants/colors'
+import { View, Text, StyleSheet, TouchableOpacity} from 'react-native'
+import { purple, white, black } from '../constants/colors'
 
 import { getDeck } from '../utils/api'
 
@@ -17,29 +17,45 @@ class DeckDetail extends Component {
 		this.state = {
 			deck: {
 				title: '',
-				questions: ''
+				questions: []
 			}
 		}
 	}
-
 	componentDidMount() {
+		// API In:Title Out:Object
 		getDeck(this.props.navigation.state.params.deckId)
-			.then(items => 
-				this.setState(
-					{ deck: items }
-				)
-			)
+			.then(results => this.doStateUpdate(results))
 	}
-
+	doStateUpdate(results) {
+		this.setState({ deck :results })
+	}
+	startQuiz(){
+		console.log('startQuiz')
+	}
+	handleNewCard(){
+		console.log('handleNewCard')
+	}	
 	render() {
 		const { deck } = this.state
 
-		return (
-			<View style={styles.center}>
-				<Text >{deck.title}</Text>
-				<Text>{deck.questions.length}</Text>
-			</View>
-		)
+		if (deck) {
+			return (
+				<View style={styles.center}>
+					<Text style={[styles.header]}>{deck.title}</Text>
+					<Text style={[styles.subheader]}>{deck.questions.length} Cards</Text>
+
+					<TouchableOpacity onPress={() => this.startQuiz()}>
+						<Text style={styles.button}>Start Quiz</Text>
+					</TouchableOpacity>
+
+					<TouchableOpacity onPress={() => this.handleNewCard()}>
+						<Text style={styles.button}>Add new card</Text>
+					</TouchableOpacity>
+				</View>
+			)
+		} 
+
+		return null;
 	}
 }
 
@@ -56,6 +72,34 @@ const styles = StyleSheet.create({
 		marginLeft: 30,
 		marginRight: 30,
 	},
+	header: {
+		marginBottom: 20,
+		fontSize: 30,
+		color: purple,
+		textAlign: 'center'
+	},
+	subheader: {
+		marginBottom: 60,
+		fontSize: 24,
+		color: black,
+		textAlign: 'center'
+	},
+	button: {
+		borderRadius: 3,
+		borderColor: purple,
+		borderWidth: 1,
+		paddingLeft: 15,
+		paddingRight: 15,
+		paddingTop: 7,
+		paddingBottom: 7,
+		textAlign: 'center',
+		color: purple,
+		fontSize: 18,
+		letterSpacing: 0.7,
+		fontWeight: '500',
+		marginBottom: 20,
+		width: 300
+	}
 })
 
 export default DeckDetail

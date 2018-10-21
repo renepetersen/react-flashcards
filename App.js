@@ -6,9 +6,10 @@ import { Constants } from 'expo'
 import Decks from './components/Decks'
 import NewDeck from './components/NewDeck'
 import DeckDetail from './components/DeckDetail'
+import ResetDecks from './components/ResetDecks'
 
 import { purple, white } from './constants/colors'
-import { Foundation, MaterialCommunityIcons } from '@expo/vector-icons'
+import { Foundation, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
 
 
 function FlashcardsStatusBar ({backgroundColor, ...props}) {
@@ -34,6 +35,13 @@ const Tabs = createBottomTabNavigator({
 			tabBarIcon: ({ tintColor }) => <MaterialCommunityIcons name='new-box' size={30} color={tintColor} />
 		}
 	},
+	ResetDecks: {
+		screen: ResetDecks,
+		navigationOptions: {
+			tabBarLabel: 'Reset',
+			tabBarIcon: ({ tintColor }) => <MaterialIcons name='remove-circle' size={30} color={tintColor} />
+		}
+	}	
 },
 {
 	navigationOptions: {
@@ -59,11 +67,24 @@ const MainNavigator = createStackNavigator({
 	Home: {
 		screen: Tabs,
 		navigationOptions: {
-			header: null
+			title: 'Flashcards',
+			headerTintColor: white,
+			headerStyle: {
+				backgroundColor: purple
+			}
 		}
 	},
 	DeckDetail: {
 		screen: DeckDetail,
+		navigationOptions: {
+			headerTintColor: white,
+			headerStyle: {
+				backgroundColor: purple
+			}
+		}
+	},
+	ResetDecks: {
+		screen: ResetDecks,
 		navigationOptions: {
 			headerTintColor: white,
 			headerStyle: {
