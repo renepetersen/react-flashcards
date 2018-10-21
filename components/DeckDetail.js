@@ -24,10 +24,9 @@ class DeckDetail extends Component {
 	componentDidMount() {
 		// API In:Title Out:Object
 		getDeck(this.props.navigation.state.params.deckId)
-			.then(results => this.doStateUpdate(results))
-	}
-	doStateUpdate(results) {
-		this.setState({ deck :results })
+			.then(( results ) => {
+				this.setState(() => ({ deck : results }))
+			})
 	}
 	startQuiz(){
 		console.log('startQuiz')
