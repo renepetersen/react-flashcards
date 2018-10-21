@@ -1,38 +1,46 @@
 import React, { Component } from 'react'
-import { AsyncStorage } from 'react-native'
-import { 
-	View, 
+import { NavigationActions, StackActions } from 'react-navigation'
+import {
+	View,
 	Text,
 	StyleSheet,
 	TextInput,
 	KeyboardAvoidingView,
-	Platform,
 	TouchableOpacity} from 'react-native'
-import { NavigationActions, StackActions } from 'react-navigation'
 import { purple, white, gray } from '../constants/colors'
-import { saveDeckTitle } from '../utils/api'
+import { addCardToDeck } from '../utils/api'
 
-// 4. New Deck View
-// An option to enter in the title for the new deck
-// An option to submit the new deck title
+// 5. New Question View
+// An option to enter in the question
+// An option to enter in the answer
+// An option to submit the new question
 
 
-class NewDeck extends Component {
+class AddCard extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			inputText: '',
+			title: '',
+			question: '',
+			answer: ''
 		}
 	}
-	handleChange = (inputText) => {
+	componentDidMount() {
+		const { deckId } = this.props.navigation.state.params
+
 		this.setState(() => ({
-			inputText
+			title: deckId
 		}))
 	}
-	handleSaveButton = () => {
-		return saveDeckTitle(this.state.inputText)
-			.then(this.goToDeckDetail(this.state.inputText))
+ 	handleSaveButton = () => {
+		const {title, question, answer } = this.state
+
+		return addCardToDeck(title, {
+			question: question,
+			answer: answer
+		}).then(() => this.goToDeckDetail(title))
 	}
+
 	goToDeckDetail = (deckId) => {
 		const { navigate, dispatch } = this.props.navigation
 		const resetAction = StackActions.reset({
@@ -41,30 +49,37 @@ class NewDeck extends Component {
 				NavigationActions.navigate({ routeName: 'Home', params: { deckId }})
 			]
 		})
+
 		dispatch(resetAction)
 		navigate('DeckDetail', { deckId: deckId })
 	}
 
 	render() {
-		const { inputText } = this.state
-
 		return (
 			<KeyboardAvoidingView behavior='padding' style={styles.center}>
-				<Text style={[styles.header]}>What is the title of your new deck?</Text>
+				<Text style={[styles.header]}>Add Card</Text>
 
+				<Text style={[styles.label]}>Your question</Text>
 				<TextInput
-					onChangeText={this.handleChange}
-					value={inputText}
-					placeholder={'Deck Title'}
 					style={styles.input}
+					onChangeText={question => this.setState({ question })}
+					value={this.question}
+					placeholder={'Question'}
+				/>
+				
+				<Text style={[styles.label]}>Your Answer</Text>
+				<TextInput
+					style={styles.input}
+					onChangeText={answer => this.setState({ answer })}
+					value={this.answer}
+					placeholder={'Answer'}
 				/>
 
 				<TouchableOpacity 
 					onPress={this.handleSaveButton}
-					disabled={this.state.inputText === '' ? true : false }>
+					disabled={(this.state.question === '' || this.state.answer === '') ? true : false }>
 					<Text style={styles.button}>Submit</Text>
 				</TouchableOpacity>
-
 			</KeyboardAvoidingView>
 		)
 	}
@@ -89,6 +104,12 @@ const styles = StyleSheet.create({
 		color: purple,
 		textAlign: 'center'
 	},
+	label: {
+		marginBottom: 10,
+		fontSize: 24,
+		color: purple,
+		textAlign: 'center'
+	},	
 	input: {
 		height: 40,
 		width: 300,
@@ -118,4 +139,4 @@ const styles = StyleSheet.create({
 	}
 })
 
-export default NewDeck
+export default AddCard

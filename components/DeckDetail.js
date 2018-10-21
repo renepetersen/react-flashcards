@@ -30,10 +30,14 @@ class DeckDetail extends Component {
 	}
 	startQuiz(){
 		console.log('startQuiz')
+		const { deck } = this.state
+		console.log(deck)
 	}
-	handleNewCard(){
-		console.log('handleNewCard')
-	}	
+	handleNewCard = (deckId) => {
+		const { navigate } = this.props.navigation
+
+		return navigate('AddCard', { deckId })
+	}
 	render() {
 		const { deck } = this.state
 
@@ -44,14 +48,14 @@ class DeckDetail extends Component {
 					<Text style={[styles.subheader]}>{deck.questions.length} Cards</Text>
 
 					{deck.questions.length > 0 ? ( 
-						<TouchableOpacity onPress={() => this.startQuiz()}>
+						<TouchableOpacity onPress={() => this.startQuiz(deck.title)}>
 							<Text style={styles.button}>Start Quiz</Text>
 						</TouchableOpacity>
 					) : (
 						<Text style={{marginBottom: 20}}>Empty deck</Text>
 					)}
 
-					<TouchableOpacity onPress={() => this.handleNewCard()}>
+					<TouchableOpacity onPress={() => this.handleNewCard(deck.title)}>
 						<Text style={styles.button}>Add new card</Text>
 					</TouchableOpacity>
 

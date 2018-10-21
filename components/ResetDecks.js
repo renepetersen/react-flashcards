@@ -7,11 +7,10 @@ import { Foundation } from '@expo/vector-icons'
 
 
 class ResetDecks extends Component {
-	clearAsyncStorage = async() => {
+	clearAsyncStorage = () => {
 		AsyncStorage.clear();
 
 		const { navigate, dispatch } = this.props.navigation
-
 		const resetAction = StackActions.reset({
 			index: 0,
 			actions: [
@@ -19,24 +18,22 @@ class ResetDecks extends Component {
 			]
 		})
 		dispatch(resetAction)
-		navigate( 'Home')
+		navigate('Home')
 	}
 	render() {
 		return (
 			<View style={styles.center}>
 
-				<View>
-					<Text style={{textAlign:'center'}}>
-						<Foundation name='alert' size={50} />
-					</Text>
+				<Text style={{textAlign:'center'}}>
+					<Foundation name='alert' size={50} />
+				</Text>
 
-					<Text style={{textAlign:'center'}}>
-						Attention
-					</Text>				
-					<Text style={[{marginBottom: 25},{textAlign:'center'}]}>
-						By pressing this button will remove all your cards ! The default set will be displayed.
-					</Text>
-				</View>
+				<Text style={{textAlign:'center'}}>
+					Attention
+				</Text>
+				<Text style={[{marginBottom: 25},{textAlign:'center'}]}>
+					By pressing this button will remove all your cards ! The default set will be displayed.
+				</Text>
 
 				<TouchableOpacity onPress={this.clearAsyncStorage}>
 					<Text style={styles.button}>Remove all cards</Text>

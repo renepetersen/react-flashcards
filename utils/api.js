@@ -25,8 +25,8 @@ function setFirstDeck() {
 export function getDeck(id) {
 	return AsyncStorage.getItem(FLASHCARDS_STORAGE_KEY)
 		.then(checkItems)
-		.then(function(items) { 
-			return items[id] 
+		.then(function(items) {
+			return items[id]
 		})
 }
 
@@ -42,3 +42,11 @@ export function saveDeckTitle(title) {
 }
 
 //AddCardToDeck: take in two arguments, title and card, and will add the card to the list of questions for the deck with the associated title. 
+export function addCardToDeck(title, inputs) {
+	return AsyncStorage.getItem(FLASHCARDS_STORAGE_KEY)
+		.then(data => {
+			decks = JSON.parse(data)
+			decks[title].questions.push(inputs)
+			AsyncStorage.setItem(FLASHCARDS_STORAGE_KEY, JSON.stringify(decks))
+		})
+}

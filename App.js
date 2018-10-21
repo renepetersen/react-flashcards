@@ -7,6 +7,7 @@ import Decks from './components/Decks'
 import NewDeck from './components/NewDeck'
 import DeckDetail from './components/DeckDetail'
 import ResetDecks from './components/ResetDecks'
+import AddCard from './components/AddCard'
 
 import { purple, white } from './constants/colors'
 import { Foundation, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
@@ -91,7 +92,16 @@ const MainNavigator = createStackNavigator({
 				backgroundColor: purple
 			}
 		}
-	}
+	},
+	AddCard: {
+		screen: AddCard,
+		navigationOptions: {
+			headerTintColor: white,
+			headerStyle: {
+				backgroundColor: purple
+			}
+		}
+	},	
 })
 
 export default class App extends React.Component {
