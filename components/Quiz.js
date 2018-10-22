@@ -115,7 +115,7 @@ class Quiz extends Component {
 								{!flipCard 
 									? 'Answer ' 
 									: 'Question '}
-									<Feather name='refresh-cw' size={20} style={{marginLeft: 10}} />
+									<Feather name='refresh-cw' size={14} style={{marginLeft: 10}} />
 								</Text>
 						</TouchableOpacity>
 	

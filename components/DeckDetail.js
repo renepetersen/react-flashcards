@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity} from 'react-native'
 import { purple, white, black } from '../constants/colors'
-
 import { getDeck } from '../utils/api'
+import { clearLocalNotification, setLocalNotification } from '../utils/helpers'
 
 // 2. Individual Deck View
 // displays the title of the Deck
@@ -30,6 +30,9 @@ class DeckDetail extends Component {
 	}
 	startQuiz = (deckId) => {
 		const { navigate } = this.props.navigation
+
+		clearLocalNotification()
+			.then(setLocalNotification)
 
 		return navigate('Quiz', { deckId })
 	}
