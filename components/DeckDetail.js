@@ -28,10 +28,10 @@ class DeckDetail extends Component {
 				this.setState(() => ({ deck : results }))
 			})
 	}
-	startQuiz(){
-		console.log('startQuiz')
-		const { deck } = this.state
-		console.log(deck)
+	startQuiz = (deckId) => {
+		const { navigate } = this.props.navigation
+
+		return navigate('Quiz', { deckId })
 	}
 	handleNewCard = (deckId) => {
 		const { navigate } = this.props.navigation

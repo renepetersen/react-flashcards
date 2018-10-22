@@ -8,6 +8,7 @@ import NewDeck from './components/NewDeck'
 import DeckDetail from './components/DeckDetail'
 import ResetDecks from './components/ResetDecks'
 import AddCard from './components/AddCard'
+import Quiz from './components/Quiz'
 
 import { purple, white } from './constants/colors'
 import { Foundation, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
@@ -101,7 +102,16 @@ const MainNavigator = createStackNavigator({
 				backgroundColor: purple
 			}
 		}
-	},	
+	},
+	Quiz: {
+		screen: Quiz,
+		navigationOptions: {
+			headerTintColor: white,
+			headerStyle: {
+				backgroundColor: purple
+			}
+		}
+	}
 })
 
 export default class App extends React.Component {
