@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity} from 'react-native'
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated} from 'react-native'
 import { NavigationActions } from 'react-navigation'
 import { purple, white, black } from '../constants/colors'
 import { getDeck } from '../utils/api'
@@ -40,6 +40,21 @@ class Quiz extends Component {
 				))
 			})
 	}
+	componentWillMount() {
+		this.animatedValue = new Animated.Value(0);
+		this.value = 0;
+		this.animatedValue.addListener(({ value }) => {
+			this.value = value;
+		})
+		this.frontInterpolate = this.animatedValue.interpolate({
+			inputRange: [0, 180],
+			outputRange: ['0deg', '180deg'],
+		})
+		this.backInterpolate = this.animatedValue.interpolate({
+			inputRange: [0, 180],
+			outputRange: ['180deg', '360deg']
+		})
+	}
 	goToNextQuestion = (questionIndex, deck) => {
 		questionIndex++
 
@@ -50,6 +65,8 @@ class Quiz extends Component {
 			: 	this.setState(() => (
 					{ questionIndex: questionIndex }
 				))
+
+		this.flipCard()
 	}
 	handleCorrectAnswer = (questionIndex, deck) => {
 		this.setState(() => (
@@ -57,14 +74,31 @@ class Quiz extends Component {
 		))
 
 		this.goToNextQuestion(questionIndex, deck)
+		this.flipCard()
 	}
-	flipCard = (flipCard) => 
+	flipCard = (flipCard) => {
 		this.setState(() => (
 			{ flipCard: !flipCard }
-		)
-	)
+		))
+
+		if (this.value >= 90) {
+			Animated.spring(this.animatedValue,{
+				toValue: 0,
+				friction: 8,
+				tension: 10
+			}).start();
+		} else {
+			Animated.spring(this.animatedValue,{
+				toValue: 180,
+				friction: 8,
+				tension: 10
+			}).start();
+		}
+	}	
 	goToHome = (item) => {
 		return this.props.navigation.navigate('Home')
+		
+		this.flipCard()
 	}
 	restartQuiz = () => {
 		this.setState(() => ({
@@ -72,21 +106,34 @@ class Quiz extends Component {
 			totalCorrect: 0,
 			questionIndex: 0
 		}))
+
+		this.flipCard()
 	}
 	static navigationOptions = ({ navigation }) => ({
 		title: 'Quiz ' + navigation.state.params.deckId
 	})
 	render() {
 		const { deck, questionIndex, totalCorrect, showResult, flipCard } = this.state
+		
+		const frontAnimatedStyle = {
+			transform: [
+				{ rotateY: this.frontInterpolate}
+			]
+		}
+		const backAnimatedStyle = {
+			transform: [
+				{ rotateY: this.backInterpolate }
+			]
+		}
 
 		return showResult 
 		? (
 			<View style={styles.center}>
-				<Text style={[styles.header]}>
+				<Text style={styles.header}>
 					You got {totalCorrect} out of {deck.questions.length}
 				</Text>
 
-				<Text style={[styles.header]}>
+				<Text style={styles.header}>
 					Score: {(totalCorrect / deck.questions.length * 100).toFixed(0)}%
 				</Text>
 
@@ -99,41 +146,50 @@ class Quiz extends Component {
 				</TouchableOpacity>
 			</View>
 		) : (
-			// Flatlist
 			<ScrollView>
 				<View style={styles.center}>
-					<View style={styles.card}>
-						<Text style={[styles.header]}>
-							{flipCard
-								? deck.questions[questionIndex].answer
-								: deck.questions[questionIndex].question
-							}
-						</Text>
-						
-						<TouchableOpacity onPress={() => this.flipCard(flipCard)}>
-							<Text style={styles.button}>
-								{!flipCard 
-									? 'Answer ' 
-									: 'Question '}
-									<Feather name='refresh-cw' size={14} style={{marginLeft: 10}} />
+					<View>
+						<Animated.View style={[styles.flipCard, frontAnimatedStyle]}>
+							<TouchableOpacity onPress={() => this.flipCard(flipCard)}>
+								<Text style={styles.button}>
+									Show answer <Feather name='refresh-cw' size={14} style={{marginLeft: 10}} />
 								</Text>
-						</TouchableOpacity>
-	
-						<View style={styles.answercontainer}>
-							<TouchableOpacity 
-								onPress={() => this.goToNextQuestion(questionIndex, deck)}
-								style={[styles.buttonansw, {flex: 1, backgroundColor: '#e3bab4'}]}>
-								<Text style={[styles.buttonanswText, {color: '#be5d53'}]}>Incorrect</Text>
 							</TouchableOpacity>
-							<TouchableOpacity 
-								onPress={() => this.handleCorrectAnswer(questionIndex, deck)}
-								style={[styles.buttonansw, {flex: 1, backgroundColor: '#cbd38a'}]}>
-								<Text style={[styles.buttonanswText, {color: '#95a25a'}]}>Correct</Text>
-							</TouchableOpacity>
-						</View>
-					</View>
+							
+							<Text style={[styles.header]}>
+								{deck.questions[questionIndex].question}
+							</Text>
 
-					<Text style={{color: '#cccccc'}}>
+						</Animated.View>
+
+						<Animated.View style={[backAnimatedStyle, styles.flipCard, styles.flipCardBack]}>
+							<TouchableOpacity onPress={() => this.flipCard(flipCard)}>
+								<Text style={styles.plainbutton}>
+									Show question <Feather name='refresh-cw' size={14} style={{marginLeft: 10}} />
+									</Text>
+							</TouchableOpacity>
+							
+							<Text style={[styles.header]}>
+								{deck.questions[questionIndex].answer}
+							</Text>
+
+							<View style={styles.answercontainer}>
+								<TouchableOpacity 
+									onPress={() => this.goToNextQuestion(questionIndex, deck)}
+									style={[styles.buttonansw, {flex: 1, backgroundColor: '#e3bab4'}]}>
+									<Text style={[styles.buttonanswText, {color: '#be5d53'}]}>Incorrect</Text>
+								</TouchableOpacity>
+								
+								<TouchableOpacity 
+									onPress={() => this.handleCorrectAnswer(questionIndex, deck)}
+									style={[styles.buttonansw, {flex: 1, backgroundColor: '#cbd38a'}]}>
+									<Text style={[styles.buttonanswText, {color: '#95a25a'}]}>Correct</Text>
+								</TouchableOpacity>
+							</View>
+						</Animated.View>
+					</View>
+					
+					<Text style={styles.navigator}>
 						{questionIndex + 1} of {deck.questions.length}
 					</Text>
 				</View>
@@ -149,31 +205,14 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		marginLeft: 20,
 		marginRight: 20,
-	},
-	card: {
-		flex: 1,
-		alignItems: 'center',
-		borderRadius: 3,
-		paddingTop: 40,
-		marginLeft: 10,
-		marginRight: 10,
-		marginTop: 40,
-		marginBottom: 20,
-		justifyContent: 'center',
-		shadowColor: 'rgba(0, 0, 0, 0.24)',
-		shadowOpacity: 0.8,
-		shadowRadius: 3,
-		shadowOffset: {
-			width: 0,
-			height: 3
-		},
-		backgroundColor: white,
 	},	
 	header: {
 		marginBottom: 40,
 		fontSize: 30,
 		color: purple,
-		textAlign: 'center'
+		textAlign: 'center',
+		paddingLeft: 20,
+		paddingRight: 20
 	},
 	button: {
 		borderRadius: 3,
@@ -189,7 +228,21 @@ const styles = StyleSheet.create({
 		letterSpacing: 0.7,
 		fontWeight: '500',
 		marginBottom: 40,
-		width: 200
+		width: 200,
+	},
+	plainbutton: {
+		borderColor: purple,
+		paddingLeft: 15,
+		paddingRight: 15,
+		paddingTop: 0,
+		paddingBottom: 7,
+		textAlign: 'center',
+		color: purple,
+		fontSize: 18,
+		letterSpacing: 0.7,
+		fontWeight: '500',
+		marginBottom: 40,
+		width: 200,
 	},
 	buttonansw: {
 		paddingLeft: 15,
@@ -207,7 +260,43 @@ const styles = StyleSheet.create({
 	answercontainer: {
 		flexDirection: 'row',
 		alignContent: 'stretch',
-	}
+	},
+	navigator: {
+		color: '#cccccc',
+		marginTop: 20,
+	},
+	flipCard: {
+		width: 300,
+		backfaceVisibility: 'hidden',
+		flex: 1,
+		alignItems: 'center',
+		borderRadius: 3,
+		paddingTop: 40,
+		marginLeft: 10,
+		marginRight: 10,
+		marginTop: 40,
+		marginBottom: 20,
+		justifyContent: 'center',
+		shadowColor: 'rgba(0, 0, 0, 0.24)',
+		shadowOpacity: 0.8,
+		shadowRadius: 3,
+		shadowOffset: {
+			width: 0,
+			height: 3
+		},
+		backgroundColor: white,
+		position: 'relative',
+	},
+	flipCardBack: {
+		position: "absolute",
+		top: 0,
+	},
+	flipText: {
+		width: 90,
+		fontSize: 20,
+		color: 'white',
+		fontWeight: 'bold',
+	}	
 })
 
 export default Quiz
