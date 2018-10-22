@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
 	header: {
 		marginBottom: 20,
 		fontSize: 30,
+		fontWeight: '500',
 		color: purple,
 		textAlign: 'center'
 	},

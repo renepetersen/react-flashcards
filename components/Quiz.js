@@ -28,7 +28,6 @@ class Quiz extends Component {
 			},
 			questionIndex: 0,
 			totalCorrect: 0,
-			flipCard: false,
 			showResult: false
 		}
 	}
@@ -77,10 +76,6 @@ class Quiz extends Component {
 		this.flipCard()
 	}
 	flipCard = (flipCard) => {
-		this.setState(() => (
-			{ flipCard: !flipCard }
-		))
-
 		if (this.value >= 90) {
 			Animated.spring(this.animatedValue,{
 				toValue: 0,
@@ -148,8 +143,12 @@ class Quiz extends Component {
 		) : (
 			<ScrollView>
 				<View style={styles.center}>
+					<Text style={styles.questionnavigator}>
+						Question {questionIndex + 1} of {deck.questions.length}
+					</Text>
+
 					<View>
-						<Animated.View style={[styles.flipCard, frontAnimatedStyle]}>
+						<Animated.View style={[styles.flipcard, frontAnimatedStyle]}>
 							<TouchableOpacity onPress={() => this.flipCard(flipCard)}>
 								<Text style={styles.button}>
 									Show answer <Feather name='refresh-cw' size={14} style={{marginLeft: 10}} />
@@ -162,7 +161,7 @@ class Quiz extends Component {
 
 						</Animated.View>
 
-						<Animated.View style={[backAnimatedStyle, styles.flipCard, styles.flipCardBack]}>
+						<Animated.View style={[backAnimatedStyle, styles.flipcard, styles.flipcardback]}>
 							<TouchableOpacity onPress={() => this.flipCard(flipCard)}>
 								<Text style={styles.plainbutton}>
 									Show question <Feather name='refresh-cw' size={14} style={{marginLeft: 10}} />
@@ -188,10 +187,6 @@ class Quiz extends Component {
 							</View>
 						</Animated.View>
 					</View>
-					
-					<Text style={styles.navigator}>
-						{questionIndex + 1} of {deck.questions.length}
-					</Text>
 				</View>
 			</ScrollView>
 		)
@@ -209,6 +204,7 @@ const styles = StyleSheet.create({
 	header: {
 		marginBottom: 40,
 		fontSize: 30,
+		fontWeight: '500',
 		color: purple,
 		textAlign: 'center',
 		paddingLeft: 20,
@@ -247,8 +243,8 @@ const styles = StyleSheet.create({
 	buttonansw: {
 		paddingLeft: 15,
 		paddingRight: 15,
-		paddingTop: 7,
-		paddingBottom: 7,
+		paddingTop: 12,
+		paddingBottom: 12,
 	},	
 	buttonanswText: {
 		textAlign: 'center',
@@ -261,20 +257,20 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignContent: 'stretch',
 	},
-	navigator: {
-		color: '#cccccc',
-		marginTop: 20,
+	questionnavigator: {
+		color: '#666666',
+		marginTop: 80,
 	},
-	flipCard: {
+	flipcard: {
 		width: 300,
 		backfaceVisibility: 'hidden',
-		flex: 1,
+		// flex: 1,
 		alignItems: 'center',
 		borderRadius: 3,
 		paddingTop: 40,
 		marginLeft: 10,
 		marginRight: 10,
-		marginTop: 40,
+		marginTop: 20,
 		marginBottom: 20,
 		justifyContent: 'center',
 		shadowColor: 'rgba(0, 0, 0, 0.24)',
@@ -285,18 +281,11 @@ const styles = StyleSheet.create({
 			height: 3
 		},
 		backgroundColor: white,
-		position: 'relative',
 	},
-	flipCardBack: {
+	flipcardback: {
 		position: "absolute",
 		top: 0,
-	},
-	flipText: {
-		width: 90,
-		fontSize: 20,
-		color: 'white',
-		fontWeight: 'bold',
-	}	
+	}
 })
 
 export default Quiz

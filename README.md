@@ -6,7 +6,7 @@ Created for the Expo IOS simulator.
 
 ## To start 
 
-* In your terminal type: `npm install` to install the node packages
+* In your terminal type: `npm install` or `yarn install` to install the node packages
 * type: `expo start` to start the simulator. This runs the react app in the development mode.
 * Use your iPhone and the QR code scanner (camera) to start the app
 
