@@ -1,5 +1,5 @@
 {
-  "name": "Flashcards the app",
+  "name": "Flashcards",
   "main": "node_modules/expo/AppEntry.js",
   "private": true,
   "scripts": {
